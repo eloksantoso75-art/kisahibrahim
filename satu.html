@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belajar Kisah Nabi Ibrahim a.s.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --bg: #0a1628;
+      --surface: #132040;
+      --text: #e8dcc8;
+      --primary: #c9a84c;
+      --secondary: #2a6b5a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app-wrap {
+      width: 100%;
+      max-width: 800px;
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1, h2, h3, h4, .heading-font {
+      font-family: 'Amiri', serif;
+      color: var(--primary);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--bg);
+      border: none;
+      padding: 12px 24px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--secondary);
+      color: var(--text);
+      padding: 12px 24px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .menu-card {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .menu-card:hover {
+      transform: scale(1.03);
+    }
+
+    /* Pages styling visibility handles */
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+
+    /* Progress elements */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .slide-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: inline-block;
+      margin: 0 4px;
+      cursor: pointer;
+    }
+    .slide-indicator.active {
+      background: var(--primary);
+    }
+
+    /* Games style utilities */
+    .scramble-input {
+      background: var(--bg);
+      border: 1px solid var(--primary);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+    }
+
+    .word-chip {
+      background: var(--secondary);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      user-select: none;
+      display: inline-block;
+    }
+    .word-chip.used {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .match-item {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .match-item.selected {
+      border-color: var(--primary);
+      background: rgba(201,168,76,0.1);
+    }
+    .match-item.matched {
+      background: rgba(42,107,90,0.3);
+      border-color: var(--secondary);
+      color: rgba(255,255,255,0.5);
+      cursor: default;
+    }
+
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .quiz-option:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .quiz-option.selected {
+      border-color: var(--primary);
+      background: rgba(201,168,76,0.15);
+    }
+
+    /* Toast overlay fallback system */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    #toast.error {
+      background: #c0392b;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrap">
+  <header>
+    <h1 id="mainTitle">Belajar Kisah Nabi Ibrahim a.s.</h1>
+    <p id="subtitle" style="opacity:0.7; font-size:0.9rem;">Pembelajaran Interaktif Pendidikan Agama Islam</p>
+  </header>
+
+  <div id="toast"></div>
+
+  <div id="pageHome" class="page active">
+    <div class="card" style="max-width: 450px; margin: 0 auto 24px; text-align: center;">
+      <h4 style="font-size: 1.3rem; margin-bottom: 8px;">👑 Identitas Murid</h4>
+      <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 14px;">Masukkan nama lengkapmu sebelum belajar atau bermain:</p>
+      <input type="text" id="inputNamaSiswa" placeholder="Ketik nama lengkapmu disini..." 
+             style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--primary); background: var(--bg); color: var(--text); text-align: center; font-size: 1rem; font-weight: bold;">
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:1.4rem; text-align:center;">Pilih Menu Belajar</h3>
+      <div class="menu-grid">
+        <div class="card menu-card" onclick="validasiMulai('pageMateri')">
+          <div style="font-size:2.5rem; margin-bottom:8px">📖</div>
+          <strong>Materi Kisah</strong>
+          <p style="font-size:0.75rem; opacity:0.6; margin-top:4px;">Pelajari sejarah keteladanan Nabi Ibrahim</p>
+        </div>
+        <div class="card menu-card" onclick="validasiMulai('pageGames')">
+          <div style="font-size:2.5rem; margin-bottom:8px">🎮</div>
+          <strong>Game Edukasi</strong>
+          <p style="font-size:0.75rem; opacity:0.6; margin-top:4px;">Mainkan game Scramble, Susun Kata, & Jodohkan</p>
+        </div>
+        <div class="card menu-card" onclick="validasiMulai('pageQuiz')">
+          <div style="font-size:2.5rem; margin-bottom:8px">📝</div>
+          <strong>Latihan Soal</strong>
+          <p style="font-size:0.75rem; opacity:0.6; margin-top:4px;">Uji pemahamanmu lewat kuis seru</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pageMateri" class="page">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <button class="nav-btn" onclick="showPage('pageHome')"><i data-lucide="arrow-left"></i></button>
+      <span id="slideCounter" style="font-size:0.9rem; font-weight:bold;">1 / 6</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div id="materiProgress" class="progress-bar"></div>
+    </div>
+    <div class="card" id="slideContent"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+      <button class="btn-secondary" id="btnPrevSlide" onclick="changeSlide(-1)">← Kembali</button>
+      <div id="slideIndicators"></div>
+      <button class="btn-primary" id="btnNextSlide" onclick="changeSlide(1)">Selanjutnya →</button>
+    </div>
+  </div>
+
+  <div id="pageGames" class="page">
+    <div id="gameSelect">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <button class="nav-btn" onclick="showPage('pageHome')"><i data-lucide="arrow-left"></i></button>
+        <h3 style="font-size:1.4rem;">Pilih Permainan</h3>
+      </div>
+      <div class="menu-grid">
+        <div class="card menu-card" onclick="startGame('scramble')">
+          <div style="font-size:2rem; margin-bottom:6px">🔤</div>
+          <strong>Scramble</strong>
+        </div>
+        <div class="card menu-card" onclick="startGame('susun')">
+          <div style="font-size:2rem; margin-bottom:6px">📝</div>
+          <strong>Susun Kata</strong>
+        </div>
+        <div class="card menu-card" onclick="startGame('match')">
+          <div style="font-size:2rem; margin-bottom:6px">🔗</div>
+          <strong>Menjodohkan</strong>
+        </div>
+      </div>
+    </div>
+    <div id="gameArea" style="display:none;"></div>
+  </div>
+
+  <div id="pageQuiz" class="page">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <button class="nav-btn" onclick="showPage('pageHome')"><i data-lucide="arrow-left"></i></button>
+      <span id="quizCounter" style="font-size:0.9rem; font-weight:bold;">1 / 20</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div id="quizProgress" class="progress-bar"></div>
+    </div>
+    <div id="quizContainer"></div>
+  </div>
+
+</div>
+
+<script>
+// ==================== CONFIG SPREADSHEET ====================
+let namaSiswa = "";
+// PASTE URL WEB APP APPS SCRIPT ANDA DI BAWAH INI:
+const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxe7sCKDYdB_uXZZb4m6kL_ofuid0EIMRg-AYqoa2ISWhKYHCLYXBIfwQnQshlb7QkF/exec"; 
+
+function validasiMulai(halamanTujuan) {
+  const inputEl = document.getElementById('inputNamaSiswa');
+  if (!inputEl || inputEl.value.trim() === "") {
+    alert("Maaf, kamu harus memasukkan namamu dulu ya sebelum memulai!");
+    if(inputEl) inputEl.focus();
+    return;
+  }
+  namaSiswa = inputEl.value.trim();
+  showPage(halamanTujuan);
+  if (halamanTujuan === 'pageMateri') { currentSlide = 0; renderSlide(); }
+  if (halamanTujuan === 'pageQuiz') { initQuiz(); }
+}
+
+function kirimKeSpreadsheet(nilai, status) {
+  if (!namaSiswa || SPREADSHEET_URL === "URL_APLIKASI_WEB_ANDA") {
+    console.log("Sinkronisasi spreadsheet dilewati (Nama kosong atau URL belum dikonfigurasi).");
+    return;
+  }
+  fetch(SPREADSHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nama: namaSiswa, nilai: nilai, status: status })
+  })
+  .then(() => console.log(`Spreadsheet terupdate: ${status}`))
+  .catch(err => console.error("Gagal mengirim ke spreadsheet:", err));
+}
+
+// ==================== CORE UTILITIES ====================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if(pageId === 'pageGames') backToGames();
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type === 'error' ? 'error' : '';
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 1500);
+}
+
+function playTone(freq, dur) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    osc.start(); osc.stop(ctx.currentTime + dur);
+  } catch(e) {}
+}
+function playCorrect() { playTone(587.33, 0.15); setTimeout(() => playTone(880, 0.2), 100); }
+function playWrong() { playTone(220, 0.3); }
+
+// ==================== SLIDES DATA & LOGIC ====================
+let currentSlide = 0;
+const slides = [
+  {
+    title:'Hidup Nabi Ibrahim pada Masa Raja Namrud',
+    icon:'👑',
+    content:`<div style="text-align:center;margin-bottom:16px">
+      <svg width="140" height="100" viewBox="0 0 140 100">
+        <circle cx="35" cy="20" r="12" fill="none" stroke="#c0392b" stroke-width="2"/>
+        <polygon points="35,32 28,42 42,42" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+        <line x1="35" y1="32" x2="35" y2="55" stroke="#c0392b" stroke-width="2"/>
+        <line x1="35" y1="42" x2="20" y2="52" stroke="#c0392b" stroke-width="2"/>
+        <line x1="35" y1="42" x2="50" y2="52" stroke="#c0392b" stroke-width="2"/>
+        <circle cx="80" cy="25" r="12" fill="none" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="80" y1="37" x2="80" y2="60" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="80" y1="45" x2="65" y2="55" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="80" y1="45" x2="95" y2="55" stroke="#c9a84c" stroke-width="2"/>
+        <text x="35" y="75" text-anchor="middle" fill="#c0392b" font-size="8" font-family="Amiri">Raja Namrud</text>
+        <text x="80" y="75" text-anchor="middle" fill="#c9a84c" font-size="8" font-family="Amiri">Nabi Ibrahim</text>
+      </svg>
+    </div>
+    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px">
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both">👑 <strong style="color:#c9a84c">Raja Namrud</strong> adalah seorang penguasa yang sangat takabur (sombong) dan menganggap dirinya sendiri sebagai Tuhan.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.1s">🏰 Raja Namrud membangun istana yang sangat tinggi dan megah untuk menunjukkan kekuasaannya yang luar biasa.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.2s">⚠️ Raja Namrud sangat menentang Nabi Ibrahim yang menyampaikan tauhid (pesan tentang Allah Swt. yang Maha Esa).</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.3s">🔥 Ketika Nabi Ibrahim menolak menyembah berhala, Raja Namrud memerintahkan untuk <strong style="color:#c9a84c">melempar Nabi Ibrahim ke dalam api yang besar</strong> sebagai hukuman.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.4s">✨ Namun Allah membuat api itu menjadi <strong style="color:#c9a84c">dingin dan damai</strong> untuk Nabi Ibrahim. Ini adalah mukjizat yang menunjukkan kekuatan Allah.</li>
+    </ul>`
+  },
+  {
+    title:'Keturunan Nabi Ibrahim a.s.',
+    icon:'👨‍👩‍👧‍👦',
+    content:`<div style="text-align:center;margin-bottom:16px;font-size:.9rem;line-height:1.8">
+      <div style="color:#c9a84c;font-weight:700;margin-bottom:12px">Pohon Keluarga Nabi Ibrahim</div>
+      <div style="opacity:.7;margin-bottom:8px">Nabi Ibrahim a.s.</div>
+      <div style="margin:8px 0">↓ ↓</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div class="card" style="padding:12px;animation:slideIn .4s ease both">
+          <strong style="color:#c9a84c">Nabi Ismail a.s.</strong><br/>
+          <span style="font-size:.75rem;opacity:.6">Ibu: Hajar</span>
+        </div>
+        <div class="card" style="padding:12px;animation:slideIn .4s ease both;animation-delay:.1s">
+          <strong style="color:#c9a84c">Nabi Ishaq a.s.</strong><br/>
+          <span style="font-size:.75rem;opacity:.6">Ibu: Sarah</span>
+        </div>
+      </div>
+      <div style="opacity:.6;margin-bottom:8px">Dari keturunannya ...</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="padding:10px;background:rgba(42,107,90,.15);border-color:rgba(42,107,90,.3);animation:slideIn .4s ease both;animation-delay:.2s">
+          <span style="font-size:.8rem;opacity:.7">Nabi Muhammad Saw.<br/><em>(Nabi Penutup)</em></span>
+        </div>
+        <div class="card" style="padding:10px;background:rgba(42,107,90,.15);border-color:rgba(42,107,90,.3);animation:slideIn .4s ease both;animation-delay:.3s">
+          <span style="font-size:.8rem;opacity:.7">Nabi Yakub, Yusuf,<br/>Musa, Daud, Sulaiman</span>
+        </div>
+      </div>
+    </div>
+    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;margin-top:16px">
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.4s">👨 Dari Nabi Ismail turun <strong style="color:#c9a84c">Nabi Muhammad Saw.</strong>, Rasul terakhir yang datang untuk seluruh umat manusia.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.5s">👨 Dari Nabi Ishaq turun ribuan nabi dan utusan Allah, termasuk <strong style="color:#c9a84c">Nabi Yakub, Nabi Yusuf, Nabi Musa, Nabi Daud, dan Nabi Sulaiman</strong>.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.6s">✨ Karena itu Nabi Ibrahim disebut <strong style="color:#c9a84c">"Abul Anbiya"</strong> yang artinya <strong style="color:#c9a84c">"Bapak Para Nabi"</strong>.</li>
+    </ul>`
+  },
+  {
+    title:'Pencarian Nabi Ibrahim akan Tuhan yang Sebenarnya',
+    icon:'🌙',
+    content:`<div style="text-align:center;margin-bottom:20px;position:relative;height:120px;overflow:hidden;border-radius:16px;background:linear-gradient(180deg,#0a0e1a,#132040)">
+      <svg width="100%" height="120" style="position:absolute;inset:0">
+        <circle cx="30%" cy="30" r="4" fill="#c9a84c" opacity=".8"></circle>
+        <circle cx="50%" cy="20" r="3" fill="#c9a84c" opacity=".6"></circle>
+        <circle cx="70%" cy="35" r="3.5" fill="#c9a84c" opacity=".7"></circle>
+        <circle cx="80%" cy="60" r="18" fill="#c9a84c" opacity=".15"/>
+        <path d="M88 48a14 14 0 0 1 0 24 18 18 0 1 0 0-24z" fill="#c9a84c" opacity=".9"/>
+        <text x="50%" y="110" text-anchor="middle" fill="rgba(201,168,76,.5)" font-size="9" font-family="Amiri">Mencari Tuhan melalui alam</text>
+      </svg>
+    </div>
+    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px">
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both">🧒 Nabi Ibrahim a.s. adalah pemuda yang <strong style="color:#c9a84c">cerdas dan gemar berpikir</strong> tentang keberadaan Tuhan.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.1s">⭐ Suatu malam, beliau melihat <strong style="color:#c9a84c">bintang yang bersinar terang</strong> di langit dan berkata dalam hatinya: <em>"Ini adalah Tuhanku!"</em> Namun ketika bintang itu tenggelam di ufuk, beliau menyadari bahwa bintang tidak bisa menjadi Tuhan karena Tuhan tidak pernah hilang.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.2s">🌙 Kemudian beliau melihat <strong style="color:#c9a84c">bulan yang terang</strong> terbit dan berkata: <em>"Ini adalah Tuhanku yang lebih besar!"</em> Tapi ketika bulan juga terbenam, beliau berpikir bahwa Tuhan tidak boleh naik dan terbenam seperti itu.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.3s">☀️ Lalu beliau melihat <strong style="color:#c9a84c">matahari yang sangat terang</strong> terbit dengan cahaya yang meriah dan berkata: <em>"Ini adalah Tuhanku yang paling besar!"</em> Namun matahari juga terbenam, dan beliau menyadari bahwa ini tidak mungkin Tuhan sejati.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.4s">✨ Akhirnya Nabi Ibrahim a.s. menyimpulkan dengan yakin: <em>"Sesungguhnya aku berlepas diri dari apa yang kamu persekutukan. Aku menghadapkan diriku kepada Allah Yang Menciptakan langit dan bumi, dan aku bukanlah termasuk orang-orang yang mempersekutukan Allah."</em></li>
+    </ul>`
+  },
+  {
+    title:'Kisah Nabi Ibrahim Menghancurkan Berhala',
+    icon:'💪',
+    content:`<div style="text-align:center;margin-bottom:16px">
+      <svg width="140" height="100" viewBox="0 0 140 100">
+        <rect x="15" y="25" width="25" height="35" fill="rgba(192,57,43,.3)" stroke="#c0392b" stroke-width="1.5" rx="2"/>
+        <rect x="50" y="20" width="25" height="40" fill="rgba(192,57,43,.2)" stroke="#c0392b" stroke-width="1.5" rx="2"/>
+        <rect x="85" y="28" width="25" height="32" fill="rgba(192,57,43,.25)" stroke="#c0392b" stroke-width="1.5" rx="2"/>
+        <circle cx="40" cy="15" r="12" fill="none" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="40" y1="27" x2="40" y2="50" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="40" y1="35" x2="25" y2="45" stroke="#c9a84c" stroke-width="2"/>
+        <text x="70" y="85" text-anchor="middle" fill="rgba(201,168,76,.5)" font-size="8" font-family="Amiri">Nabi Ibrahim menghancurkan berhala</text>
+      </svg>
+    </div>
+    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px">
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both">🛐 Masyarakat pada zaman Nabi Ibrahim <strong style="color:#c9a84c">menyembah berhala</strong> yang mereka buat sendiri dari batu dan kayu.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.1s">🧔 Ayahnya, Azar, adalah pembuat berhala dan menjual berhala itu kepada orang-orang.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.4s">🔨 Nabi Ibrahim lantas <strong style="color:#c9a84c">menghancurkan semua berhala</strong> dengan kapak, kecuali yang terbesar, untuk membuktikan bahwa berhala itu tidak bisa membela dirinya sendiri.</li>
+    </ul>`
+  },
+  {
+    title:'Kurban Nabi Ibrahim — Uji Ketaatan Tertinggi',
+    icon:'🤲',
+    content:`<div style="text-align:center;margin-bottom:16px">
+      <svg width="140" height="100" viewBox="0 0 140 100">
+        <circle cx="50" cy="25" r="12" fill="none" stroke="#c9a84c" stroke-width="2"/>
+        <line x1="50" y1="37" x2="50" y2="65" stroke="#c9a84c" stroke-width="2"/>
+        <circle cx="90" cy="35" r="14" fill="none" stroke="#2a6b5a" stroke-width="2"/>
+        <text x="70" y="85" text-anchor="middle" fill="rgba(201,168,76,.5)" font-size="8" font-family="Amiri">Nabi Ibrahim siap mengorbankan Ismail</text>
+      </svg>
+    </div>
+    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px">
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both">💭 Allah Swt. menguji Nabi Ibrahim dengan perintah untuk <strong style="color:#c9a84c">mengorbankan putra tercintanya, Nabi Ismail a.s.</strong></li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.3s">✨ Namun Allah tidak menginginkan darah Ismail — Allah mengganti dengan <strong style="color:#c9a84c">seekor domba</strong>. Ini adalah bukti iman yang sempurna.</li>
+      <li class="card" style="padding:14px;animation:slideIn .4s ease both;animation-delay:.4s">🎉 Peristiwa ini diabadikan menjadi <strong style="color:#c9a84c">Hari Raya Idul Adha</strong>.</li>
+    </ul>`
+  },
+  {
+    title:'Keteladanan Nabi Ibrahim a.s. untuk Kita',
+    icon:'⭐',
+    content:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="card" style="padding:14px;text-align:center;"><strong>Rela Berkorban</strong></div>
+      <div class="card" style="padding:14px;text-align:center;"><strong>Taat kepada Allah</strong></div>
+      <div class="card" style="padding:14px;text-align:center;"><strong>Berani Jujur</strong></div>
+      <div class="card" style="padding:14px;text-align:center;"><strong>Sabar</strong></div>
+    </div>
+    <div class="card" style="text-align:center;border-color:rgba(42,107,90,.4);">
+      <p style="font-style:italic;color:#c9a84c;font-family:'Amiri',serif;">"Sesungguhnya Ibrahim adalah seorang imam yang dapat dijadikan teladan bagi orang-orang yang beriman..."</p>
+      <p style="font-size:.8rem;opacity:.6">— QS. An-Nahl: 120</p>
+    </div>`
+  }
+];
+
+function renderSlide(){
+  const s = slides[currentSlide];
+  document.getElementById('slideContent').innerHTML = `
+    <h3 class="heading-font" style="color:#c9a84c;margin:0 0 16px;font-size:1.3rem">${s.icon} ${s.title}</h3>
+    ${s.content}`;
+  document.getElementById('slideCounter').textContent = `${currentSlide+1} / ${slides.length}`;
+  document.getElementById('materiProgress').style.width = `${((currentSlide+1)/slides.length)*100}%`;
+  document.getElementById('btnPrevSlide').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+  document.getElementById('btnNextSlide').textContent = currentSlide === slides.length-1 ? 'Selesai ✓' : 'Selanjutnya →';
+  
+  let ind=''; 
+  for(let i=0; i<slides.length; i++) {
+    ind += `<div class="slide-indicator ${i===currentSlide?'active':''}" onclick="currentSlide=${i};renderSlide()"></div>`;
+  }
+  document.getElementById('slideIndicators').innerHTML = ind;
+}
+
+function changeSlide(dir){
+  if(dir===1 && currentSlide===slides.length-1){
+    kirimKeSpreadsheet("-", "Selesai Mempelajari Materi");
+    showPage('pageHome');
+    currentSlide=0;
+    return;
+  }
+  currentSlide = Math.max(0, Math.min(slides.length-1, currentSlide+dir));
+  renderSlide();
+}
+
+// ==================== GAME 1: SCRAMBLE ====================
+const scrambleWords=[
+  {scrambled:'LIKHALULLAH',answer:'KHALILULLAH'},
+  {scrambled:'MAILSI',answer:'ISMAIL'},
+  {scrambled:'RAHIBIM',answer:'IBRAHIM'},
+  {scrambled:'LALAH',answer:'ALLAH'}
+];
+let scrambleIdx=0, scrambleScore=0, scrambleTimer, scrambleTime;
+
+function startGame(type){
+  document.getElementById('gameSelect').style.display='none';
+  document.getElementById('gameArea').style.display='block';
+  if(type==='scramble') initScramble();
+  else if(type==='susun') initSusun();
+  else if(type==='match') initMatch();
+}
+
+function backToGames(){
+  document.getElementById('gameSelect').style.display='flex';
+  document.getElementById('gameArea').style.display='none';
+  clearInterval(scrambleTimer);
+}
+
+function initScramble(){
+  scrambleIdx=0; scrambleScore=0; scrambleTime=60;
+  clearInterval(scrambleTimer);
+  renderScramble();
+  scrambleTimer = setInterval(()=>{
+    scrambleTime--;
+    const el = document.getElementById('scrTimer');
+    if(el) el.textContent = scrambleTime+'s';
+    if(scrambleTime<=0){ clearInterval(scrambleTimer); showScrambleResult(); }
+  },1000);
+}
+
+function renderScramble(){
+  if(scrambleIdx>=scrambleWords.length){ clearInterval(scrambleTimer); showScrambleResult(); return; }
+  const w = scrambleWords[scrambleIdx];
+  document.getElementById('gameArea').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <button class="nav-btn" onclick="backToGames()"><i data-lucide="arrow-left" style="width:18px;height:18px"></i></button>
+      <span style="color:#c9a84c;font-weight:700">🔤 Scramble</span>
+      <span style="display:flex;gap:12px;font-size:.9rem"><span>⏱ <span id="scrTimer">${scrambleTime}s</span></span><span>⭐ ${scrambleScore}</span></span>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:.85rem;opacity:.6;margin:0 0 8px">Susun huruf berikut:</p>
+      <p style="font-size:1.8rem;letter-spacing:6px;color:#c9a84c;font-weight:800;margin:0 0 20px">${w.scrambled}</p>
+      <input type="text" class="scramble-input" id="scrInput" placeholder="Ketik jawaban..." style="width:100%;max-width:300px;text-align:center" onkeydown="if(event.key==='Enter')checkScramble()">
+      <div style="margin-top:16px"><button class="btn-primary" onclick="checkScramble()">Periksa ✓</button></div>
+      <p style="font-size:.8rem;opacity:.4;margin:12px 0 0">Soal ${scrambleIdx+1} dari ${scrambleWords.length}</p>
+    </div>`;
+  lucide.createIcons();
+  setTimeout(()=>{ const inp=document.getElementById('scrInput'); if(inp)inp.focus(); },100);
+}
+
+function checkScramble(){
+  const inp = document.getElementById('scrInput'); if(!inp) return;
+  const val = inp.value.trim().toUpperCase();
+  if(val===scrambleWords[scrambleIdx].answer){ scrambleScore+=25; playCorrect(); showToast('Benar! 🎉'); }
+  else { playWrong(); showToast('Jawaban salah!','error'); }
+  scrambleIdx++; setTimeout(renderScramble,800);
+}
+
+function showScrambleResult(){
+  kirimKeSpreadsheet(scrambleScore, "Selesai Game Scramble");
+  document.getElementById('gameArea').innerHTML = `
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">🏆</div>
+      <h3 class="heading-font" style="color:#c9a84c;margin:0">Permainan Selesai!</h3>
+      <p style="font-size:2rem;color:#c9a84c;font-weight:800;margin:12px 0">${scrambleScore} / ${scrambleWords.length*25}</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button class="btn-secondary" onclick="backToGames()">← Kembali</button>
+        <button class="btn-primary" onclick="initScramble()">Main Lagi</button>
+      </div>
+    </div>`;
+}
+
+// ==================== GAME 2: SUSUN KATA ====================
+const susunSoal=[
+  {words:['Nabi','Ibrahim','taat','kepada','Allah'],answer:'Nabi Ibrahim taat kepada Allah'},
+  {words:['Ibrahim','adalah','Khalilullah','kekasih','Allah'],answer:'Ibrahim adalah Khalilullah kekasih Allah'},
+  {words:['Allah','Swt.','Tuhan','Yang','Maha','Esa'],answer:'Allah Swt. Tuhan Yang Maha Esa'}
+];
+let susunIdx=0, susunScore=0, susunSelected=[];
+
+function initSusun(){ susunIdx=0; susunScore=0; susunSelected=[]; renderSusun(); }
+function renderSusun(){
+  if(susunIdx>=susunSoal.length){ showSusunResult(); return; }
+  susunSelected=[];
+  const s = susunSoal[susunIdx];
+  const shuffled = [...s.words].sort(()=>Math.random()-.5);
+  document.getElementById('gameArea').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <button class="nav-btn" onclick="backToGames()"><i data-lucide="arrow-left" style="width:18px;height:18px"></i></button>
+      <span style="color:#c9a84c;font-weight:700">📝 Susun Kata</span>
+      <span style="font-size:.9rem">⭐ ${susunScore}</span>
+    </div>
+    <div class="card">
+      <p style="text-align:center;font-size:.85rem;opacity:.6;margin:0 0 12px">Susun kata menjadi kalimat yang benar:</p>
+      <div id="susunAnswer" style="min-height:50px;background:rgba(10,22,40,.5);border-radius:12px;padding:12px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center"></div>
+      <div id="susunWords" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${shuffled.map((w,i)=>`<span class="word-chip" data-idx="${i}" data-word="${w}" onclick="pickSusunWord(this)">${w}</span>`).join('')}</div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button class="btn-secondary" style="padding:8px 16px;font-size:.85rem" onclick="resetSusunWords()">Ulang</button>
+        <button class="btn-primary" style="padding:8px 16px;font-size:.85rem" onclick="checkSusun()">Periksa ✓</button>
+      </div>
+    </div>`;
+  lucide.createIcons();
+}
+
+function pickSusunWord(el){
+  if(el.classList.contains('used')) return;
+  el.classList.add('used');
+  susunSelected.push(el.dataset.word);
+  const ans = document.getElementById('susunAnswer');
+  const chip = document.createElement('span'); chip.className='word-chip'; chip.textContent=el.dataset.word;
+  chip.onclick = function(){
+    susunSelected = [];
+    document.getElementById('susunAnswer').querySelectorAll('.word-chip').forEach(c=>{ if(c!==this) susunSelected.push(c.textContent); });
+    this.remove(); el.classList.remove('used');
+  };
+  ans.appendChild(chip);
+}
+
+function resetSusunWords(){
+  susunSelected=[]; document.getElementById('susunAnswer').innerHTML='';
+  document.querySelectorAll('#susunWords .word-chip').forEach(el=>el.classList.remove('used'));
+}
+
+function checkSusun(){
+  const ans = susunSelected.join(' ');
+  if(ans===susunSoal[susunIdx].answer){ susunScore+=25; playCorrect(); showToast('Benar! 🎉'); }
+  else { playWrong(); showToast('Salah!','error'); }
+  susunIdx++; setTimeout(renderSusun,1000);
+}
+
+function showSusunResult(){
+  kirimKeSpreadsheet(susunScore, "Selesai Game Susun Kata");
+  document.getElementById('gameArea').innerHTML = `
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">🏆</div>
+      <h3 class="heading-font" style="color:#c9a84c;margin:0">Permainan Selesai!</h3>
+      <p style="font-size:2rem;color:#c9a84c;font-weight:800;margin:12px 0">${susunScore} / ${susunSoal.length*25}</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button class="btn-secondary" onclick="backToGames()">← Kembali</button>
+        <button class="btn-primary" onclick="initSusun()">Main Lagi</button>
+      </div>
+    </div>`;
+}
+
+// ==================== GAME 3: MENJODOHKAN ====================
+const matchPairs=[
+  {left:'Khalilullah',right:'Kekasih Allah'},
+  {left:'Raja Namrud',right:'Raja zalim'},
+  {left:'Ismail',right:'Putra Nabi Ibrahim'},
+  {left:'Allah Swt.',right:'Tuhan Yang Maha Esa'}
+];
+let matchSelLeft=null, matchSelRight=null, matchScore=0, matchedPairs=[];
+
+function initMatch(){
+  matchScore=0; matchedPairs=[]; matchSelLeft=null; matchSelRight=null;
+  renderMatch();
+}
+
+function renderMatch(){
+  const shuffledRight=[...matchPairs].sort(()=>Math.random()-.5);
+  document.getElementById('gameArea').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <button class="nav-btn" onclick="backToGames()"><i data-lucide="arrow-left" style="width:18px;height:18px"></i></button>
+      <span style="color:#c9a84c;font-weight:700">🔗 Menjodohkan</span>
+      <span style="font-size:.9rem">⭐ ${matchScore}</span>
+    </div>
+    <div class="card">
+      <p style="text-align:center;font-size:.85rem;opacity:.6;margin:0 0 16px">Cocokkan pasangan yang benar:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          ${matchPairs.map((p,i)=>`<div class="match-item ${matchedPairs.includes(i)?'matched':''}" data-side="left" data-idx="${i}" onclick="selectMatch('left',${i})">${p.left}</div>`).join('')}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          ${shuffledRight.map((p,i)=>{
+            const origIdx = matchPairs.findIndex(mp=>mp.right===p.right);
+            return `<div class="match-item ${matchedPairs.includes(origIdx)?'matched':''}" data-side="right" data-idx="${origIdx}" onclick="selectMatch('right',${origIdx})">${p.right}</div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`;
+  lucide.createIcons();
+}
+
+function selectMatch(side,idx){
+  if(matchedPairs.includes(idx) && side==='left') return;
+  document.querySelectorAll('.match-item.selected').forEach(el=>{ if(el.dataset.side===side) el.classList.remove('selected'); });
+  if(side==='left'){matchSelLeft=idx} else {matchSelRight=idx}
+  document.querySelectorAll(`.match-item[data-side="${side}"][data-idx="${idx}"]`).forEach(el=>el.classList.add('selected'));
+  
+  if(matchSelLeft!==null && matchSelRight!==null){
+    if(matchSelLeft===matchSelRight){
+      matchedPairs.push(matchSelLeft); matchScore+=25; playCorrect(); showToast('Cocok! ✓');
+    } else { playWrong(); showToast('Coba lagi!','error'); }
+    matchSelLeft=null; matchSelRight=null;
+    setTimeout(()=>{
+      if(matchedPairs.length===matchPairs.length) showMatchResult();
+      else renderMatch();
+    },600);
+  }
+}
+
+function showMatchResult(){
+  kirimKeSpreadsheet(matchScore, "Selesai Game Menjodohkan");
+  document.getElementById('gameArea').innerHTML = `
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">🏆</div>
+      <h3 class="heading-font" style="color:#c9a84c;margin:0">Semua Terjodohkan!</h3>
+      <p style="font-size:2rem;color:#c9a84c;font-weight:800;margin:12px 0">${matchScore} / ${matchPairs.length*25}</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button class="btn-secondary" onclick="backToGames()">← Kembali</button>
+        <button class="btn-primary" onclick="initMatch()">Main Lagi</button>
+      </div>
+    </div>`;
+}
+
+// ==================== QUIZ SYSTEM DATA ====================
+const quizData=[
+  {q:'Nabi Ibrahim a.s. dikenal sebagai …',o:['Raja Mesir','Bapak Para Nabi','Penulis Wahyu','Panglima Perang'],a:1},
+  {q:'Gelar Nabi Ibrahim a.s. adalah …',o:['Rasulullah','Habibullah','Khalilullah','Najiyullah'],a:2},
+  {q:'Khalilullah artinya …',o:['Nabi terakhir','Kekasih Allah','Pemimpin perang','Raja langit'],a:1},
+  {q:'Nabi Ibrahim mencari Tuhan dengan mengamati …',o:['Sungai','Gunung','Laut','Bintang, bulan, dan matahari'],a:3},
+  {q:'Nabi Ibrahim meyakini bahwa Tuhan Yang Maha Esa adalah …',o:['Matahari','Bulan','Allah Swt.','Bintang'],a:2},
+  {q:'Ayah Nabi Ismail adalah …',o:['Nabi Musa','Nabi Ibrahim','Nabi Nuh','Nabi Isa'],a:1},
+  {q:'Nabi Ibrahim terkenal karena sifatnya yang …',o:['Sombong','Pemarah','Taat kepada Allah','Malas'],a:2},
+  {q:'Raja yang ditentang Nabi Ibrahim adalah …',o:["Fir'aun",'Namrud','Jalut','Abu Jahal'],a:1},
+  {q:'Kaum Nabi Ibrahim menyembah …',o:['Allah','Malaikat','Berhala','Nabi'],a:2},
+  {q:'Nabi Ibrahim selalu berkata …',o:['Bohong','Kasar','Kebenaran','Rahasia'],a:2},
+  {q:'Nabi Ibrahim memiliki sifat …',o:['Penakut','Berani','Dengki','Malas'],a:1},
+  {q:'Allah mencintai hamba yang …',o:['Sombong','Taat','Malas','Jahat'],a:1},
+  {q:'Nabi Ibrahim adalah nabi yang sangat …',o:['Kaya','Taat','Kuat','Cepat'],a:1},
+  {q:'Nabi Ibrahim mengajarkan untuk menyembah …',o:['Patung','Matahari','Allah Swt.','Bulan'],a:2},
+  {q:'Sikap rela berkorban termasuk teladan …',o:['Nabi Ibrahim','Qarun','Namrud','Abu Lahab'],a:0},
+  {q:'Nabi Ibrahim dilempar ke dalam …',o:['Laut','Api','Sumur','Penjara'],a:1},
+  {q:'Mukjizat Nabi Ibrahim adalah api menjadi …',o:['Air','Dingin dan damai','Angin','Hujan'],a:1},
+  {q:'Nabi Ibrahim membangun Ka\'bah bersama …',o:['Nabi Musa','Nabi Ismail','Nabi Isa','Nabi Nuh'],a:1},
+  {q:'Istri Nabi Ibrahim yang melahirkan Ismail adalah …',o:['Sarah','Hajar','Maryam','Asiyah'],a:1},
+  {q:'Hari Raya Idul Adha berkaitan dengan kisah Nabi Ibrahim dan …',o:['Nabi Musa','Nabi Ismail','Nabi Isa','Nabi Nuh'],a:1}
+];
+let quizIdx=0, quizAnswers=[];
+
+function initQuiz(){
+  quizIdx=0; quizAnswers=new Array(quizData.length).fill(-1);
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const q = quizData[quizIdx];
+  document.getElementById('quizCounter').textContent = `${quizIdx+1} / ${quizData.length}`;
+  document.getElementById('quizProgress').style.width = `${((quizIdx+1)/quizData.length)*100}%`;
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="card" style="max-width:600px;margin:0 auto">
+      <p style="font-size:.8rem;color:#c9a84c;margin:0 0 8px">Soal ${quizIdx+1}</p>
+      <h3 style="margin:0 0 20px;font-size:1.05rem;line-height:1.5">${q.q}</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${q.o.map((opt,i)=>`<button class="quiz-option ${quizAnswers[quizIdx]===i?'selected':''}" onclick="selectQuiz(${i})">${'ABCD'[i]}. ${opt}</button>`).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:24px">
+        <button class="btn-secondary" style="padding:10px 20px;font-size:.9rem;${quizIdx===0?'visibility:hidden':''}" onclick="quizIdx--;renderQuiz()">← Sebelumnya</button>
+        ${quizIdx===quizData.length-1?
+          `<button class="btn-primary" style="padding:10px 20px;font-size:.9rem" onclick="finishQuiz()">Selesai ✓</button>`:
+          `<button class="btn-primary" style="padding:10px 20px;font-size:.9rem" onclick="quizIdx++;renderQuiz()">Selanjutnya →</button>`}
+      </div>
+    </div>`;
+}
+
+function selectQuiz(i){ quizAnswers[quizIdx]=i; renderQuiz(); playTone(440,.1); }
+
+function finishQuiz(){
+  let correct=0;
+  quizData.forEach((q,i)=>{ if(quizAnswers[i]===q.a) correct++; });
+  const pct = Math.round((correct/quizData.length)*100);
+  
+  kirimKeSpreadsheet(pct, "Selesai Latihan Soal (Kuis)");
+  
+  let msg, emoji;
+  if(pct>=80){ msg='MasyaAllah, hebat sekali! 🌟'; emoji='🏆'; }
+  else if(pct>=50){ msg='Tetap semangat belajar ya! 💪'; emoji='⭐'; }
+  else { msg='Yuk belajar lagi agar lebih pintar! 📖'; emoji='📚'; }
+
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="card" style="max-width:500px;margin:0 auto;text-align:center">
+      <div style="font-size:4rem;margin-bottom:12px">${emoji}</div>
+      <h3 class="heading-font" style="color:#c9a84c;margin:0;font-size:1.5rem">Hasil Uji Kemampuan</h3>
+      <div style="font-size:3rem;color:#c9a84c;font-weight:800;margin:16px 0">${pct}</div>
+      <div style="display:flex;justify-content:center;gap:24px;margin:12px 0">
+        <div><span style="color:#2a6b5a;font-size:1.5rem;font-weight:800">${correct}</span><br><span style="font-size:.8rem;opacity:.6">Benar</span></div>
+        <div><span style="color:#c0392b;font-size:1.5rem;font-weight:800">${quizData.length-correct}</span><br><span style="font-size:.8rem;opacity:.6">Salah</span></div>
+      </div>
+      <p style="margin:16px 0;font-size:1.05rem">${msg}</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button class="btn-secondary" onclick="showPage('pageHome')">← Beranda</button>
+        <button class="btn-primary" onclick="initQuiz()">Coba Lagi</button>
+      </div>
+    </div>`;
+
+  let review = '<div style="max-width:600px;margin:20px auto 0"><h4 style="color:#c9a84c;margin:0 0 12px">Pembahasan:</h4>';
+  quizData.forEach((q,i)=>{
+    const isCorrect = quizAnswers[i]===q.a;
+    review += `<div class="card" style="padding:12px;margin-bottom:8px;border-color:${isCorrect?'rgba(42,107,90,.4)':'rgba(192,57,43,.3)'}">
+      <p style="margin:0;font-size:.85rem"><strong>${i+1}.</strong> ${q.q}</p>
+      <p style="margin:4px 0 0;font-size:.8rem;color:${isCorrect?'#2a6b5a':'#c0392b'}">
+        ${isCorrect?'✓ Benar':'✗ Jawaban Anda: '+(q.o[quizAnswers[i]] || 'Belum dijawab')} — Jawaban: <strong>${q.o[q.a]}</strong></p>
+    </div>`;
+  });
+  review += '</div>';
+  document.getElementById('quizContainer').innerHTML += review;
+}
+
+// ==================== CONFIG THEME ENGINE (SDK) ====================
+const defaultConfig={
+  main_title:'Belajar Kisah Nabi Ibrahim a.s.',
+  subtitle:'Pembelajaran Interaktif Pendidikan Agama Islam',
+  background_color:'#0a1628', surface_color:'#132040', text_color:'#e8dcc8',
+  primary_color:'#c9a84c', secondary_color:'#2a6b5a', font_family:'Nunito', font_size:16
+};
+
+function applyConfig(cfg){
+  document.getElementById('mainTitle').textContent=cfg.main_title||defaultConfig.main_title;
+  document.getElementById('subtitle').textContent=cfg.subtitle||defaultConfig.subtitle;
+  
+  const bg=cfg.background_color||defaultConfig.background_color;
+  const sf=cfg.surface_color||defaultConfig.surface_color;
+  const tx=cfg.text_color||defaultConfig.text_color;
+  const pr=cfg.primary_color||defaultConfig.primary_color;
+  const sc=cfg.secondary_color||defaultConfig.secondary_color;
+
+  document.documentElement.style.setProperty('--bg',bg);
+  document.documentElement.style.setProperty('--surface',sf);
+  document.documentElement.style.setProperty('--text',tx);
+  document.documentElement.style.setProperty('--primary',pr);
+  document.documentElement.style.setProperty('--secondary',sc);
+}
+
+if(window.elementSdk){
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange:async(cfg)=>applyConfig(cfg),
+    mapToCapabilities:(cfg)=>({
+      recolorables:[
+        {get:()=>cfg.background_color||defaultConfig.background_color,set:v=>{cfg.background_color=v;window.elementSdk.setConfig({background_color:v})}},
+        {get:()=>cfg.surface_color||defaultConfig.surface_color,set:v=>{cfg.surface_color=v;window.elementSdk.setConfig({surface_color:v})}},
+        {get:()=>cfg.text_color||defaultConfig.text_color,set:v=>{cfg.text_color=v;window.elementSdk.setConfig({text_color:v})}},
+        {get:()=>cfg.primary_color||defaultConfig.primary_color,set:v=>{cfg.primary_color=v;window.elementSdk.setConfig({primary_color:v})}},
+        {get:()=>cfg.secondary_color||defaultConfig.secondary_color,set:v=>{cfg.secondary_color=v;window.elementSdk.setConfig({secondary_color:v})}}
+      ],
+      borderables:[],
+      fontEditable:{get:()=>cfg.font_family||defaultConfig.font_family,set:v=>{cfg.font_family=v;window.elementSdk.setConfig({font_family:v})}},
+      fontSizeable:{get:()=>cfg.font_size||defaultConfig.font_size,set:v=>{cfg.font_size=v;window.elementSdk.setConfig({font_size:v})}}
+    }),
+    mapToEditPanelValues:(cfg)=>new Map([
+      ['main_title',cfg.main_title||defaultConfig.main_title],
+      ['subtitle',cfg.subtitle||defaultConfig.subtitle]
+    ])
+  });
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>
